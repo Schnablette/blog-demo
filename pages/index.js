@@ -1,11 +1,26 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Inter } from "@next/font/google";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useMediaQuery } from "react-responsive";
 
-const inter = Inter({ subsets: ['latin'] })
+import profilePic from "../public/AxeSquare.jpg";
+import { NavButton } from "../components/NavButton";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const pages = ["All Posts", "About the Author", "Autograph It"];
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const [active, setActive] = useState(pages[0]);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    isMobile ? setOpen(false) : setOpen(true);
+  }, [isMobile]);
+
   return (
     <>
       <Head>
@@ -14,110 +29,54 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.js</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
-        </div>
-
-        <div className={styles.center}>
+      <div className="md:flex">
+        <nav className="bg-ocean-900 relative p-3 md:min-h-screen md:w-[250px]">
           <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
+            className="w-10 absolute top-2 left-2 rounded-xl md:relative md:w-[100px] md:top-0 md:left-0 md:m-4"
+            alt="Ann's face. She is wearing a bucket hat."
+            src={profilePic}
           />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+          {isMobile && (
+            <button onClick={() => setOpen(!open)}>
+              {open ? (
+                <XMarkIcon className="w-12 text-white absolute top-2 right-2 hover:bg-ocean-600 p-2 rounded-full" />
+              ) : (
+                <Bars3Icon className="w-12 text-white absolute top-2 right-2 hover:bg-ocean-600 p-2 rounded-full" />
+              )}
+            </button>
+          )}
+          <Link
+            href="https://linkedin.com/in/annschnabel"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
           >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
+            <p className="text-white text-xl font-bold hover:underline text-center md:text-left md:ml-4">
+              Ann Schnabel
             </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+          </Link>
+          <Link
+            href="https://twitter.com/schnablette"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
           >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
+            <p className="text-ocean-200 text-sm hover:underline text-center mb-4 md:text-left md:ml-4 md:mb-10">
+              @Schnablette
             </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+          </Link>
+          {open &&
+            pages.map((page) => {
+              return (
+                <NavButton
+                  active={active}
+                  key={page}
+                  page={page}
+                  setActive={setActive}
+                />
+              );
+            })}
+        </nav>
+        <main className="p-10"> Main Content</main>
+      </div>
     </>
-  )
+  );
 }
